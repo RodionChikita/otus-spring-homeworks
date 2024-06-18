@@ -28,8 +28,8 @@ public class StreamsIOServiceTest {
 
     @Test
     public void testPrintFormattedLine() {
-        String format = "Hello, %s!";
-        String name = "World";
+            String format = "Hello, %s!";
+            String name = "World";
         ioService.printFormattedLine(format, name);
         assertEquals(EXPECTED_OUTPUT, outputStream.toString());
     }

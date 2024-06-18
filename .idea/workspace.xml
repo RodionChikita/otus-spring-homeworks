@@ -5,31 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="daca8a75-68b6-4254-84b2-0a83d9fb8c5e" name="Changes" comment="initial commit">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/config/AppProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/config/TestFileNameProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/CsvQuestionDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/QuestionDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/dto/AnswerCsvConverter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/dto/QuestionDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/domain/Answer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/domain/Question.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/exceptions/QuestionReadException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/IOService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/StreamsIOService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/TestRunnerService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/TestRunnerServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/TestService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/TestServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/resources/questions.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/resources/spring-context.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hw01-xml-config/src/test/java/StreamsIOServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/CsvQuestionDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/CsvQuestionDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/TestServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/service/TestServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw01-xml-config/src/test/java/StreamsIOServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/hw01-xml-config/src/test/java/StreamsIOServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,28 +31,28 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2hXxcus0SBNN5EXmFR8F95GTuXp" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "hw01-xml-config",
-    "jdk.selected.JAVA_MODULE": "17",
-    "last_opened_file_path": "/Users/rodioncikita/HomeWorks/otus-spring-homeworks",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;hw01-xml-config&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rodioncikita/HomeWorks/otus-spring-homeworks&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -176,12 +156,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/CsvQuestionDao.java</url>
-          <line>25</line>
+          <line>24</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/hw01-xml-config/src/main/java/ru/otus/hw/dao/CsvQuestionDao.java</url>
-          <line>32</line>
+          <line>31</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
