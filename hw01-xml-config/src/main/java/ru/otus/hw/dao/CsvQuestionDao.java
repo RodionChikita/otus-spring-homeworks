@@ -7,8 +7,8 @@ import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
 
@@ -21,7 +21,10 @@ public class CsvQuestionDao implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-        try (FileReader reader = new FileReader(fileNameProvider.getTestFileName())) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream(fileNameProvider.getTestFileName());
+             InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             BufferedReader reader = new BufferedReader(streamReader)) {
             var csvReader = new CsvToBeanBuilder<QuestionDto>(reader)
                     .withType(QuestionDto.class)
                     .withSeparator(';')

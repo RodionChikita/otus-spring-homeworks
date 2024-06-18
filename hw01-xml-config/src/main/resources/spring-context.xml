@@ -22,6 +22,6 @@
         <constructor-arg name="fileNameProvider" ref="fileNameProvider"/>
     </bean>
     <bean id = "fileNameProvider" class = "ru.otus.hw.config.AppProperties">
-        <constructor-arg name = "testFileName" value = "hw01-xml-config/src/main/resources/questions.csv"/>
+        <constructor-arg name = "testFileName" value = "questions.csv"/>
     </bean>
 </beans>
