@@ -36,7 +36,7 @@ public class CsvQuestionDao implements QuestionDao {
                     .withIgnoreEmptyLine(true)
                     .build();
             return csvReader.stream().toList().stream().map(MAP_FROM_DTO_FUNCTION).toList();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             throw new QuestionReadException(ex.getMessage(), ex);
         }
     }
