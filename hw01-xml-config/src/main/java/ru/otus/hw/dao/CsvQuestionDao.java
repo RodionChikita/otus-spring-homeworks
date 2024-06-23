@@ -20,15 +20,14 @@ public class CsvQuestionDao implements QuestionDao {
             q -> new Question(q.getText(), q.getAnswers());
 
     private final TestFileNameProvider fileNameProvider;
-    private BufferedReader reader;
 
     @Override
     public List<Question> findAll() {
         ClassLoader classLoader = getClass().getClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream(fileNameProvider.getTestFileName());
              InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             BufferedReader reader = new BufferedReader(streamReader);
              ) {
-            setReader(new BufferedReader(streamReader));
             var csvReader = new CsvToBeanBuilder<QuestionDto>(reader)
                     .withType(QuestionDto.class)
                     .withSeparator(';')
