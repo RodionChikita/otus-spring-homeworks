@@ -6,29 +6,28 @@ import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
-    private final IOService ioService;
+    private final LocalizedIOService ioService;
 
     private final QuestionDao questionDao;
-
-    private final QuestionService questionService;
 
     @Override
     public TestResult executeTestFor(Student student) {
         ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
+        ioService.printLineLocalized("TestService.answer.the.questions");
+        ioService.printLine("");
+
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
         for (var question: questions) {
-            questionService.showQuestion(questions, question);
-            var numberOfAnswer = ioService.readIntForRangeWithPrompt(1, question.answers().size(), "Enter answer", "Your answer is invalid, try again");
-            testResult.applyAnswer(question, question.answers().get(numberOfAnswer - 1).isCorrect());
+            var isAnswerValid = false; // Задать вопрос, получить ответ
+            testResult.applyAnswer(question, isAnswerValid);
         }
-
         return testResult;
     }
+
 }
