@@ -14,6 +14,8 @@ public class TestServiceImpl implements TestService {
 
     private final QuestionDao questionDao;
 
+    private final QuestionService questionService;
+
     @Override
     public TestResult executeTestFor(Student student) {
         ioService.printLine("");
@@ -22,9 +24,11 @@ public class TestServiceImpl implements TestService {
         var testResult = new TestResult(student);
 
         for (var question: questions) {
-            var isAnswerValid = false; // Задать вопрос, получить ответ
-            testResult.applyAnswer(question, isAnswerValid);
+            questionService.showQuestion(questions, question);
+            var numberOfAnswer = ioService.readIntForRangeWithPrompt(1, question.answers().size(), "Enter answer", "Your answer is invalid, try again");
+            testResult.applyAnswer(question, question.answers().get(numberOfAnswer - 1).isCorrect());
         }
+
         return testResult;
     }
 }
