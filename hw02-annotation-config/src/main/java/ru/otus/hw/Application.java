@@ -13,7 +13,7 @@ import ru.otus.hw.service.TestRunnerService;
 public class Application {
     public static void main(String[] args) {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(Application.class);;
+        ApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
         var testRunnerService = context.getBean(TestRunnerService.class);
         testRunnerService.run();
 

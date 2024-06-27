@@ -16,14 +16,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
 
-    @RequiredArgsConstructor
-    @Setter
-    @Component
-    public class CsvQuestionDao implements QuestionDao {
-        private static final Function<QuestionDto, Question> MAP_FROM_DTO_FUNCTION =
-                q -> new Question(q.getText(), q.getAnswers());
+@RequiredArgsConstructor
+@Setter
+@Component
+public class CsvQuestionDao implements QuestionDao {
+    private static final Function<QuestionDto, Question> MAP_FROM_DTO_FUNCTION =
+            q -> new Question(q.getText(), q.getAnswers());
 
-        private final TestFileNameProvider fileNameProvider;
+    private final TestFileNameProvider fileNameProvider;
 
     @Override
     public List<Question> findAll() {
