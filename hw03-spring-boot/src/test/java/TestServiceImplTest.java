@@ -40,10 +40,8 @@ public class TestServiceImplTest {
         when(questionDao.findAll()).thenReturn(List.of(question));
         when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString())).thenReturn(1);
 
-        // When
         TestResult testResult = testService.executeTestFor(student);
 
-        // Then
         assertEquals(1, testResult.getAnsweredQuestions().size());
         assertEquals(1, testResult.getRightAnswersCount());
 
