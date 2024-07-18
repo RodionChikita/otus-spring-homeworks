@@ -6,6 +6,7 @@ import ru.otus.hw.domain.*;
 import ru.otus.hw.service.LocalizedIOServiceImpl;
 import ru.otus.hw.service.TestServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +22,12 @@ public class TestServiceImplTest {
 
     @InjectMocks
     private TestServiceImpl testService;
+    private static final Answer TEST_ANSWER_1 = new Answer("Science doesn't know this yet", true);
+    private static final Answer TEST_ANSWER_2 = new Answer("Certainly. The red UFO is from Mars. And green is from Venus", true);
+    private static final Answer TEST_ANSWER_3 = new Answer("Absolutely not", true);
+    private static final Question TEST_QUESTION = new Question("Is there life on Mars?", List.of(TEST_ANSWER_1, TEST_ANSWER_2, TEST_ANSWER_3));
+    private static final List<Question> TEST_QUESTIONS = new ArrayList<>(List.of(TEST_QUESTION));
+    private static final Student STUDENT = new Student("John", "Doe");
 
     @BeforeEach
     public void setUp() {
@@ -29,18 +36,10 @@ public class TestServiceImplTest {
 
     @Test
     public void testExecuteTestFor() {
-        // Given
-        Student student = new Student("John", "Doe");
-
-        Answer answer1 = new Answer("Science doesn't know this yet", true);
-        Answer answer2 = new Answer("Certainly. The red UFO is from Mars. And green is from Venus", false);
-        Answer answer3 = new Answer("Absolutely not", false);
-        Question question = new Question("Is there life on Mars?", List.of(answer1, answer2, answer3));
-
-        when(questionDao.findAll()).thenReturn(List.of(question));
+        when(questionDao.findAll()).thenReturn(TEST_QUESTIONS);
         when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString())).thenReturn(1);
 
-        TestResult testResult = testService.executeTestFor(student);
+        TestResult testResult = testService.executeTestFor(STUDENT);
 
         assertEquals(1, testResult.getAnsweredQuestions().size());
         assertEquals(1, testResult.getRightAnswersCount());
