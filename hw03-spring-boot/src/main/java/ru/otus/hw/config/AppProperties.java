@@ -4,12 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-
 import java.util.Locale;
 import java.util.Map;
+
 @ConfigurationPropertiesScan
 @Setter
 @ConfigurationProperties(prefix = "test")
@@ -24,7 +21,7 @@ public class AppProperties implements TestConfig, TestFileNameProvider, LocaleCo
     private Locale locale;
 
     private Map<String, String> fileNameByLocaleTag;
-    //@ConstructorBinding
+
     public AppProperties(Locale locale, int rightAnswersCountToPass, Map<String, String> fileNameByLocaleTag) {
         this.locale = locale;
         this.rightAnswersCountToPass = rightAnswersCountToPass;
@@ -37,6 +34,7 @@ public class AppProperties implements TestConfig, TestFileNameProvider, LocaleCo
 
     @Override
     public String getTestFileName() {
+        System.out.println(fileNameByLocaleTag.get(locale.toLanguageTag()));
         return fileNameByLocaleTag.get(locale.toLanguageTag());
     }
 }

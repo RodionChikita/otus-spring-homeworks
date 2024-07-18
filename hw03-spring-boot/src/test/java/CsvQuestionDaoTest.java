@@ -7,6 +7,7 @@ import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.dao.CsvQuestionDao;
 import ru.otus.hw.exceptions.QuestionReadException;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -31,8 +32,8 @@ public class CsvQuestionDaoTest {
     }
     @Test
     public void testFindAll() {
-        String testFileName = "non-existent-file.csv";
+        String testFileName = "questions.csv";
         when(fileNameProvider.getTestFileName()).thenReturn(testFileName);
-        assertThrows(QuestionReadException.class, () -> csvQuestionDao.findAll());
+        assertDoesNotThrow(() -> csvQuestionDao.findAll());
     }
 }

@@ -1,10 +1,9 @@
 package ru.otus.hw.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dao.QuestionDao;
+import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
@@ -17,12 +16,9 @@ public class TestServiceImpl implements TestService {
 
     private final QuestionDao questionDao;
 
-    private final QuestionService questionService;
     @Autowired
-
-    public TestServiceImpl(LocalizedIOServiceImpl ioService, QuestionDao questionDao, QuestionService questionService) {
+    public TestServiceImpl(LocalizedIOServiceImpl ioService, QuestionDao questionDao) {
         this.ioService = ioService;
-        this.questionService = questionService;
         this.questionDao = questionDao;
     }
 
@@ -34,12 +30,20 @@ public class TestServiceImpl implements TestService {
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
-        for (var question: questions) {
-            questionService.showQuestion(questions, question);
-            var numberOfAnswer = ioService.readIntForRangeWithPromptLocalized(1, question.answers().size(), "TestService.answer.the.questions", "Your answer is invalid, try again");
-            testResult.applyAnswer(question, question.answers().get(numberOfAnswer - 1).isCorrect());
+        for (int i = 0; i < questions.size(); i++) {
+            showQuestion(questions, i);
+            var numberOfAnswer = ioService.readIntForRangeWithPromptLocalized(1, questions.get(i).answers().size(), "TestService.answer.the.questions", "TestService.invalid.answer");
+            testResult.applyAnswer(questions.get(i), questions.get(i).answers().get(numberOfAnswer - 1).isCorrect());
         }
 
         return testResult;
+    }
+
+    private void showQuestion(List<Question> questions, int questionNumber) {
+        ioService.printFormattedLine(questionNumber + 1 + ". %s", questions.get(questionNumber).text());
+        var answers = questions.get(questionNumber).answers();
+        for (int i = 0; i < answers.size(); i++) {
+            ioService.printFormattedLine("  " + (i + 1) + ") %s", answers.get(i).text());
+        }
     }
 }
