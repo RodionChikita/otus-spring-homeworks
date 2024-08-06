@@ -13,7 +13,7 @@ import ru.otus.hw.exceptions.QuestionReadException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
+@SpringBootTest(classes = CsvQuestionDao.class)
 @ExtendWith(SpringExtension.class)
 public class CsvQuestionDaoTest {
 

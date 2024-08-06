@@ -9,6 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.*;
 import ru.otus.hw.service.LocalizedIOServiceImpl;
+import ru.otus.hw.service.TestService;
 import ru.otus.hw.service.TestServiceImpl;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
+@SpringBootTest(classes = TestService.class)
 @ExtendWith(SpringExtension.class)
 public class TestServiceImplTest {
 

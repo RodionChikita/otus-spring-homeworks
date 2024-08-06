@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
+//@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = StudentService.class)
 public class StudentServiceImplTest {
     private static final String FIRST_NAME = "John";
     private static final String LAST_NAME = "Doe";
