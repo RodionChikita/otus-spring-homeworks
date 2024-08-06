@@ -37,7 +37,7 @@ public class CsvQuestionDaoTest {
         String testFileName = "non-existent-file.csv";
         when(fileNameProvider.getTestFileName()).thenReturn(testFileName);
         assertThrows(QuestionReadException.class, () -> csvQuestionDao.findAll());
-
+    }
 
     @Test
     public void testFindAllWithExistFile(){
