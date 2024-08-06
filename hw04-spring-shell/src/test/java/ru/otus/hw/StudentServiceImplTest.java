@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
+@SpringBootTest(classes = StudentService.class)
 public class StudentServiceImplTest {
     private static final String FIRST_NAME = "John";
     private static final String LAST_NAME = "Doe";

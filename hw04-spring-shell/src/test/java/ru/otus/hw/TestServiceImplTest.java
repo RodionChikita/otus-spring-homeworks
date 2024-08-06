@@ -2,22 +2,25 @@ package ru.otus.hw;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.*;
 import ru.otus.hw.service.LocalizedIOServiceImpl;
+import ru.otus.hw.service.TestService;
 import ru.otus.hw.service.TestServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
-@ExtendWith(SpringExtension.class)
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@SpringBootTest(classes = TestService.class)
 public class TestServiceImplTest {
 
     @Mock
