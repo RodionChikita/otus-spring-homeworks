@@ -18,7 +18,9 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,52 +37,22 @@ public class JdbcBookRepository implements BookRepository {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
-    private final RowMapper<Book> bookRowMapper = new RowMapper<Book>() {
-        @Override
-        public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Book book = new Book();
-            book.setId(rs.getLong("id"));
-            book.setTitle(rs.getString("title"));
-
-            Author author = new Author();
-            author.setId(rs.getLong("author_id"));
-            author.setFullName(rs.getString("full_name"));
-            book.setAuthor(author);
-
-            return book;
-        }
-    };
-
-    private final RowMapper<Genre> genreRowMapper = new RowMapper<Genre>() {
-        @Override
-        public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Genre genre = new Genre();
-            genre.setId(rs.getLong("id"));
-            genre.setName(rs.getString("name"));
-            return genre;
-        }
-    };
-
     @Override
     public Optional<Book> findById(long id) {
-        Map<String, Object> params = Collections.singletonMap("id", id);
-        String bookQuery = "SELECT b.id, b.title, a.id as author_id, a.full_name " +
+        String query = "SELECT b.id as book_id, b.title, " +
+                "a.id as author_id, a.full_name, " +
+                "g.id as genre_id, g.name as genre_name " +
                 "FROM books b " +
                 "JOIN authors a ON b.author_id = a.id " +
+                "LEFT JOIN books_genres bg ON b.id = bg.book_id " +
+                "LEFT JOIN genres g ON bg.genre_id = g.id " +
                 "WHERE b.id = :id";
 
-        Book book = namedParameterJdbcOperations.queryForObject(bookQuery, params, bookRowMapper);
+        Map<String, Object> params = Collections.singletonMap("id", id);
 
-        if (book != null) {
-            String genreQuery = "SELECT g.id, g.name "
-                    + "FROM genres g " +
-                    "JOIN books_genres bg ON g.id = bg.genre_id " +
-                    "WHERE bg.book_id = :id";
-            List<Genre> genres = namedParameterJdbcOperations.query(genreQuery, params, genreRowMapper);
-            book.setGenres(genres);
-        }
+        Book book = namedParameterJdbcOperations.query(query, params, new BookResultSetExtractor());
 
-        return Optional.of(book);
+        return Optional.ofNullable(book);
     }
 
     @Override
@@ -214,7 +186,28 @@ public class JdbcBookRepository implements BookRepository {
 
         @Override
         public Book extractData(ResultSet rs) throws SQLException, DataAccessException {
-            return null;
+            Book book = null;
+            Map<Long, Genre> genreMap = new HashMap<>();
+            while (rs.next()) {
+                book = new Book();
+                book.setId(rs.getLong("book_id"));
+                book.setTitle(rs.getString("title"));
+                Author author = new Author();
+                author.setId(rs.getLong("author_id"));
+                author.setFullName(rs.getString("full_name"));
+                book.setAuthor(author);
+                long genreId = rs.getLong("genre_id");
+                if (genreId > 0 && !genreMap.containsKey(genreId)) {
+                    Genre genre = new Genre();
+                    genre.setId(genreId);
+                    genre.setName(rs.getString("genre_name"));
+                    genreMap.put(genreId, genre);
+                }
+            }
+            if (book != null) {
+                book.setGenres(new ArrayList<>(genreMap.values()));
+            }
+            return book;
         }
     }
 
