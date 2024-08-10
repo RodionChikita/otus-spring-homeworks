@@ -1,18 +1,18 @@
-create table if not exist
+create table
 authors(
     id bigserial,
     full_name varchar(255),
     primary key (id)
 );
 
-create table if not exist
+create table
 genres(
     id bigserial,
     name varchar(255),
     primary key (id)
 );
 
-create table if not exist
+create table
 books(
     id bigserial,
     title varchar(255),
@@ -20,7 +20,7 @@ books(
     primary key (id)
 );
 
-create table if not exist
+create table
 books_genres(
     book_id bigint references books(id) on delete cascade,
     genre_id bigint references genres(id) on delete cascade,
