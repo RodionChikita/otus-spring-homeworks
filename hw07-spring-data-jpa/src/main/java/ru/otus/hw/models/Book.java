@@ -11,8 +11,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -30,8 +28,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "books")
-//@NamedEntityGraph(name = "book-authors-entity-graph",
-//        attributeNodes = {@NamedAttributeNode("author")})
 public class Book {
 
     @Id
