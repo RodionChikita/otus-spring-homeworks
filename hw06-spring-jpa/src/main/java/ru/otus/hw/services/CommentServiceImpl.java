@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public Comment update(long id, String text, long bookId) {
-        return save(0, text, bookId);
+        return save(id, text, bookId);
     }
 
     @Transactional
