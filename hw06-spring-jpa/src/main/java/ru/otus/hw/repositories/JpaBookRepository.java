@@ -20,7 +20,10 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        return Optional.ofNullable(em.find(Book.class, id));
+        Book book = em.find(Book.class, id);
+        System.out.println(book.getGenres().get(1));
+        System.out.println(book.getComments().get(1));
+        return Optional.of(book);
     }
 
     @Override
@@ -29,7 +32,9 @@ public class JpaBookRepository implements BookRepository {
         TypedQuery<Book> query = em.createQuery("select distinct b from Book b " +
                 "left join fetch b.comments", Book.class);
         query.setHint(FETCH.getKey(), entityGraph);
-        return query.getResultList();
+        List<Book> books = query.getResultList();
+        System.out.println(books.get(1).getGenres());
+        return books;
     }
 
     @Override

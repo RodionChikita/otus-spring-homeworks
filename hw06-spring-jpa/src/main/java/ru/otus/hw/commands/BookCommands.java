@@ -20,7 +20,8 @@ public class BookCommands {
 
     @ShellMethod(value = "Find all books", key = "ab")
     public String findAllBooks() {
-        return bookService.findAll().stream()
+        return bookService.findAll()
+                .stream()
                 .map(bookConverter::bookToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
