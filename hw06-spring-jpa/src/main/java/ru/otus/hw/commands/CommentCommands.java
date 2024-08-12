@@ -6,8 +6,8 @@ import org.springframework.shell.standard.ShellMethod;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.services.CommentService;
 
-import java.util.Set;
 import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @ShellComponent
 public class CommentCommands {

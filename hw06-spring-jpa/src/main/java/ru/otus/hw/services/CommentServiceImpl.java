@@ -9,15 +9,15 @@ import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
-import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RequiredArgsConstructor
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
+
     private final CommentRepository commentRepository;
+
     private final BookRepository bookRepository;
+
     @Override
     public Optional<Comment> findById(long id) {
         return commentRepository.findById(id);

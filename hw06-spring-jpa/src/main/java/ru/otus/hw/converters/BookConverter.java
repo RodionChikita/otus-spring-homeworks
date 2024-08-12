@@ -12,6 +12,7 @@ public class BookConverter {
     private final AuthorConverter authorConverter;
 
     private final GenreConverter genreConverter;
+
     private final CommentConverter commentConverter;
 
     public String bookToString(Book book) {

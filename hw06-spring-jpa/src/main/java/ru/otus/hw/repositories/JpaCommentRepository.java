@@ -1,24 +1,26 @@
 package ru.otus.hw.repositories;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.models.Genre;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Transactional
 @Repository
 @RequiredArgsConstructor
-public class JpaCommentRepository implements CommentRepository{
+public class JpaCommentRepository implements CommentRepository {
     @PersistenceContext
     private final EntityManager em;
 
     private final BookRepository bookRepository;
+
     @Override
     public Optional<Comment> findById(long id) {
         return Optional.ofNullable(em.find(Comment.class, id));
@@ -45,7 +47,7 @@ public class JpaCommentRepository implements CommentRepository{
     @Override
     public List<Comment> findAllByBookId(long bookId) {
         var book = bookRepository.findById(bookId);
-        if (book.isEmpty()){
+        if (book.isEmpty()) {
             throw new EntityNotFoundException(("Book with id %d not found".formatted(bookId)));
         }
         return book.get().getComments();
