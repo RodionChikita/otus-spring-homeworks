@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Comment;
@@ -12,7 +11,6 @@ import ru.otus.hw.models.Comment;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
 @Repository
 @RequiredArgsConstructor
 public class JpaCommentRepository implements CommentRepository {
