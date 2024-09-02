@@ -2,10 +2,8 @@ package ru.otus.hw;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.*;
 import ru.otus.hw.service.LocalizedIOServiceImpl;
