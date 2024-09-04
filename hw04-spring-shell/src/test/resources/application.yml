@@ -8,7 +8,6 @@ spring:
   shell:
     interactive:
       enabled: 'false'
-
 test:
   rightAnswersCountToPass: 3
   locale: ru_RU
