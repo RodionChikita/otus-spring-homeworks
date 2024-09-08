@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Genre;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,10 +24,12 @@ public class JpaGenreRepository implements GenreRepository {
     }
 
     @Override
-    public List<Genre> findAllByIds(Set<Long> ids) {
+    public Set<Genre> findAllByIds(Set<Long> ids) {
         TypedQuery<Genre> query = em.createQuery(
                 "SELECT g FROM Genre g WHERE g.id IN :ids", Genre.class);
         query.setParameter("ids", ids);
-        return query.getResultList();
+        List<Genre> genres = query.getResultList();
+        Set<Genre> resultList = new HashSet<>(genres);
+        return resultList;
     }
 }

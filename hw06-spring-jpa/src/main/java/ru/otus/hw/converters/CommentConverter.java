@@ -8,6 +8,6 @@ import ru.otus.hw.models.Comment;
 @Component
 public class CommentConverter {
     public String commentToString(Comment comment) {
-        return "Id: %d, Text: %s".formatted(comment.getId(), comment.getText());
+        return "Id: %d, Text: %s, Book Id: %s".formatted(comment.getId(), comment.getText(), comment.getBook().getId());
     }
 }

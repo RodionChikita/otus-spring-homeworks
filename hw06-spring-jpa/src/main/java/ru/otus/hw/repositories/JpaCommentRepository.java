@@ -3,13 +3,12 @@ package ru.otus.hw.repositories;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Comment;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,16 +33,12 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
-    public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Comment c " +
-                "where c.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void deleteById(Comment comment) {
+        em.remove(comment);
     }
 
     @Override
-    public List<Comment> findAllByBookId(long bookId) {
+    public Set<Comment> findAllByBookId(long bookId) {
         var book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
             throw new EntityNotFoundException(("Book with id %d not found".formatted(bookId)));

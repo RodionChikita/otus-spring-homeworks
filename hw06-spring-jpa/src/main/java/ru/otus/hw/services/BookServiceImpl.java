@@ -51,7 +51,11 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public void deleteById(long id) {
-        bookRepository.deleteById(id);
+        var book = bookRepository.findById(id);
+        if (book.isEmpty()) {
+            throw new EntityNotFoundException("Book with id %d not found".formatted(id));
+        }
+        bookRepository.deleteById(book.get());
     }
 
     private Book save(long id, String title, long authorId, Set<Long> genresIds) {
@@ -65,8 +69,14 @@ public class BookServiceImpl implements BookService {
         if (isEmpty(genres) || genresIds.size() != genres.size()) {
             throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresIds));
         }
-
-        var book = new Book(id, title, author, genres, null);
-        return bookRepository.save(book);
+        if (bookRepository.findById(id).isEmpty()) {
+            var book = new Book(id, title, author, genres, null);
+            return bookRepository.save(book);
+        } else {
+            var book = bookRepository.findById(id).get();
+            book.setAuthor(author);
+            book.setGenres(genres);
+            return bookRepository.save(book);
+        }
     }
 }
