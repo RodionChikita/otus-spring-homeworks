@@ -1,6 +1,10 @@
 package ru.otus.hw.repositories;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
@@ -26,7 +30,7 @@ public class JpaBookRepository implements BookRepository {
                     .setHint(FETCH.getKey(), entityGraph)
                     .getSingleResult();
             return Optional.of(book);
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new EntityNotFoundException("Book with id %d not found".formatted(id));
         }
     }
