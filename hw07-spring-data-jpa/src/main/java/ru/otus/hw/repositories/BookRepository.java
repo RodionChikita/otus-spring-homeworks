@@ -13,11 +13,11 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     @Nonnull
-    @EntityGraph(attributePaths = "author")
+    @EntityGraph("book-authors-genres-entity-graph")
     Optional<Book> findById(long id);
 
     @Nonnull
-    @EntityGraph(attributePaths = "author")
+    @EntityGraph("book-authors-genres-entity-graph")
     List<Book> findAll();
 
     @Modifying
