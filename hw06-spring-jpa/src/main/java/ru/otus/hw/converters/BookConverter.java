@@ -20,16 +20,9 @@ public class BookConverter {
                 .map(genreConverter::genreToString)
                 .map("{%s}"::formatted)
                 .collect(Collectors.joining(", "));
-        String commentsString = null;
-        if (book.getComments() != null) {
-            commentsString = book.getComments().stream()
-                    .map(commentConverter::commentToString)
-                    .map("{%s}"::formatted)
-                    .collect(Collectors.joining(", "));
-        }
-        return "Id: %d, title: %s, author: {%s}, comments: {%s}, genres: {%s}".formatted(
+        return "Id: %d, title: %s, author: {%s}, genres: {%s}".formatted(
                 book.getId(),
                 book.getTitle(),
-                authorConverter.authorToString(book.getAuthor()), commentsString, genresString);
+                authorConverter.authorToString(book.getAuthor()), genresString);
     }
 }

@@ -8,8 +8,8 @@ import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -27,8 +27,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<Comment> findAllByBookId(long bookId) {
-        return Set.of((Comment) commentRepository.findAllByBookId(bookId));
+    public List<Comment> findAllByBookId(long bookId) {
+        return commentRepository.findAllByBookId(bookId);
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
         if (comment.isEmpty()) {
             throw new EntityNotFoundException("Comment with id %d not found".formatted(id));
         }
-        commentRepository.deleteById(comment.get());
+        commentRepository.deleteById(id);
     }
 
     private Comment save(long id, String text, long bookId) {
@@ -63,8 +63,6 @@ public class CommentServiceImpl implements CommentService {
             comment = commentRepository.findById(id).get();
             comment.setText(text);
         }
-        book.getComments().add(comment);
-        book.setComments(book.getComments());
         bookRepository.save(book);
         return commentRepository.save(comment);
     }

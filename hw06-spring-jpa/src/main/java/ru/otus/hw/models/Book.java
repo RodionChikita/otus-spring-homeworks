@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +21,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,11 +29,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "books")
-@NamedEntityGraph(name = "book-authors-genres-comments-entity-graph",
+@NamedEntityGraph(name = "book-authors-genres-entity-graph",
         attributeNodes = {
                 @NamedAttributeNode("author"),
-                @NamedAttributeNode("genres"),
-                @NamedAttributeNode("comments")
+                @NamedAttributeNode("genres")
         })
 public class Book {
 
@@ -53,10 +51,5 @@ public class Book {
     @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private Set<Genre> genres;
-
-    @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Set<Comment> comments;
+    private List<Genre> genres;
 }

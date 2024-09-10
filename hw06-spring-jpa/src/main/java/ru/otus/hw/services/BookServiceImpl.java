@@ -49,7 +49,7 @@ public class BookServiceImpl implements BookService {
         if (isEmpty(genres) || genresIds.size() != genres.size()) {
             throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresIds));
         }
-            var book = new Book(0, title, author, genres, null);
+            var book = new Book(0, title, author, genres);
             return bookRepository.save(book);
     }
 
@@ -81,8 +81,6 @@ public class BookServiceImpl implements BookService {
         if (book.isEmpty()) {
             throw new EntityNotFoundException("Book with id %d not found".formatted(id));
         }
-        bookRepository.deleteById(book.get());
+        bookRepository.deleteById(id);
     }
-
-
 }

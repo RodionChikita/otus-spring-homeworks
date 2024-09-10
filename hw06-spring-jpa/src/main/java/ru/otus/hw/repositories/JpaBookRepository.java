@@ -2,7 +2,6 @@ package ru.otus.hw.repositories;
 
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -23,21 +22,17 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        try {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-comments-entity-graph");
+        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-entity-graph");
             Book book = em.createQuery("SELECT b FROM Book b WHERE b.id = :id", Book.class)
                     .setParameter("id", id)
                     .setHint(FETCH.getKey(), entityGraph)
                     .getSingleResult();
-            return Optional.of(book);
-        } catch (Exception exception) {
-            throw new EntityNotFoundException("Book with id %d not found".formatted(id));
-        }
+            return Optional.ofNullable(book);
     }
 
     @Override
     public List<Book> findAll() {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-comments-entity-graph");
+        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-entity-graph");
         TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b", Book.class);
         query.setHint(FETCH.getKey(), entityGraph);
         return query.getResultList();
@@ -50,7 +45,7 @@ public class JpaBookRepository implements BookRepository {
     }
 
     @Override
-    public void deleteById(Book book) {
-        em.remove(book);
+    public void deleteById(long id) {
+        em.remove(findById(id));
     }
 }

@@ -1,22 +1,19 @@
 package ru.otus.hw.repositories;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Comment;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
 public class JpaCommentRepository implements CommentRepository {
     @PersistenceContext
     private final EntityManager em;
-
-    private final BookRepository bookRepository;
 
     @Override
     public Optional<Comment> findById(long id) {
@@ -25,24 +22,16 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public Comment save(Comment comment) {
-        if (comment.getId() == 0) {
-            em.merge(comment);
-            return comment;
-        }
         return em.merge(comment);
     }
 
     @Override
-    public void deleteById(Comment comment) {
-        em.remove(comment);
+    public void deleteById(long id) {
+        em.remove(findById(id));
     }
 
     @Override
-    public Set<Comment> findAllByBookId(long bookId) {
-        var book = bookRepository.findById(bookId);
-        if (book.isEmpty()) {
-            throw new EntityNotFoundException(("Book with id %d not found".formatted(bookId)));
-        }
-        return book.get().getComments();
+    public List<Comment> findAllByBookId(long bookId) {
+        return em.createQuery("select c from Comment c where c.book_id = :bookId", Comment.class).getResultList();
     }
 }

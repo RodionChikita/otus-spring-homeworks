@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
@@ -35,7 +36,7 @@ public class BookServiceImplIntegrationTest {
     private BookRepository bookRepository;
 
     private Author author;
-    private Set<Genre> genres;
+    private List<Genre> genres;
     private Set<Long> genresIdsSet;
 
     @BeforeEach
@@ -48,7 +49,7 @@ public class BookServiceImplIntegrationTest {
 
     @Test
     public void testFindById() {
-        Book book = new Book(0, "Test Book", author, genres, null);
+        Book book = new Book(0, "Test Book", author, genres);
         Book savedBook = bookRepository.save(book);
 
         Optional<Book> foundBook = bookService.findById(savedBook.getId());
@@ -62,22 +63,17 @@ public class BookServiceImplIntegrationTest {
 
     @Test
     public void testFindAll() {
-        Book book1 = new Book(0, "Test Book 1", author, genres, null);
-        Book book2 = new Book(0, "Test Book 2", author, genres, null);
+        Book book1 = new Book(0, "Test Book 1", author, genres);
+        Book book2 = new Book(0, "Test Book 2", author, genres);
 
         bookRepository.save(book1);
         bookRepository.save(book2);
 
         List<Book> allBooks = bookService.findAll();
 
-        assertThat(allBooks.get(allBooks.size() - 2))
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(book1);
-        assertThat(allBooks.get(allBooks.size() - 1))
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(book2);
+        assertThat(allBooks)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactlyInAnyOrder(book1, book2);
     }
 
     @Test
@@ -95,25 +91,25 @@ public class BookServiceImplIntegrationTest {
 
     @Test
     public void testUpdate() {
-        Book book = new Book(0, "Test Book", author, genres, null);
+        Book book = new Book(0, "Test Book", author, genres);
         Book savedBook = bookRepository.save(book);
 
         Author newAuthor = authorRepository.findById(3).get();
         Set<Long> newGenresIdsSet = new HashSet<>();
         newGenresIdsSet.add(4L);
-        Set<Genre> newGenres = genreRepository.findAllByIds(newGenresIdsSet);
+        List<Genre> newGenres = genreRepository.findAllByIds(newGenresIdsSet);
 
         Book updatedBook = bookService.update(savedBook.getId(), "Updated Book", newAuthor.getId(), newGenresIdsSet);
 
         assertThat(updatedBook)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
-                .isEqualTo(new Book(savedBook.getId(), "Updated Book", newAuthor, newGenres, null));
+                .isEqualTo(new Book(savedBook.getId(), "Updated Book", newAuthor, newGenres));
     }
 
     @Test
     public void testDeleteById() {
-        Book book = new Book(0, "Test Book", author, genres, null);
+        Book book = new Book(0, "Test Book", author, genres);
         Book savedBook = bookRepository.save(book);
 
         bookService.deleteById(savedBook.getId());
