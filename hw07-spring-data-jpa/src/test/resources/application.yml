@@ -6,3 +6,6 @@ spring:
     url: jdbc:postgresql://localhost:8283/otus
     password: otus
     username: otus
+  shell:
+    interactive:
+      enabled: 'false'
