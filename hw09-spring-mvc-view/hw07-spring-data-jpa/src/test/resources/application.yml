@@ -1,0 +1,11 @@
+spring:
+  flyway:
+    enabled: false
+    locations: "classpath:db.migration"
+  datasource:
+    url: jdbc:postgresql://localhost:8283/otus
+    password: otus
+    username: otus
+  shell:
+    interactive:
+      enabled: 'false'
