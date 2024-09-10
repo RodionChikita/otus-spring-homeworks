@@ -25,4 +25,7 @@ public class Comment {
 
     @Column(name = "text", nullable = false, unique = true)
     private String text;
+
+    @Column(name = "text", nullable = false, unique = true)
+    private Book book;
 }
