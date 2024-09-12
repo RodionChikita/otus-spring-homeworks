@@ -12,7 +12,7 @@
     <groupId>ru.otus.hw</groupId>
     <artifactId>hw09-spring-mvc-view</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>hw07-spring-data-jpa</name>
+    <name>hw09-spring-mvc-view</name>
 
     <properties>
         <reflections.version>0.10.2</reflections.version>

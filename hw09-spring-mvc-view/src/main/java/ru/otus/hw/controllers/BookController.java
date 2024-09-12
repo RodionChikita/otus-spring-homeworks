@@ -21,7 +21,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
+
     private final AuthorService authorService;
+
     private final GenreService genreService;
 
     @GetMapping("/")
@@ -33,7 +35,8 @@ public class BookController {
 
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") long id, Model model) {
-        Book book = bookService.findById(id).orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
+        Book book = bookService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
         List<Author> authors = authorService.findAll();
         List<Genre> genres = genreService.findAll();
         model.addAttribute("book",book);
@@ -54,13 +57,15 @@ public class BookController {
 
     @PostMapping("/edit")
     public String editBook(Book book) {
-        bookService.update(book.getId(), book.getTitle(), book.getAuthor().getId(), book.getGenres().stream().map(Genre::getId).collect(Collectors.toSet()));
+        bookService.update(book.getId(), book.getTitle(), book.getAuthor().getId(),
+                book.getGenres().stream().map(Genre::getId).collect(Collectors.toSet()));
         return "redirect:/";
     }
 
     @PostMapping("/insert")
     public String insertBook(Book book) {
-        bookService.insert(book.getTitle(), book.getAuthor().getId(), book.getGenres().stream().map(Genre::getId).collect(Collectors.toSet()));
+        bookService.insert(book.getTitle(), book.getAuthor().getId(),
+                book.getGenres().stream().map(Genre::getId).collect(Collectors.toSet()));
         return "redirect:/";
     }
 
