@@ -43,7 +43,7 @@ public class Book {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "author_id")
     private Author author;
 
