@@ -25,7 +25,8 @@ public class TestServiceImpl implements TestService {
 
         for (var question: questions) {
             questionService.showQuestion(questions, question);
-            var numberOfAnswer = ioService.readIntForRangeWithPrompt(1, question.answers().size(), "Enter answer", "Your answer is invalid, try again");
+            var numberOfAnswer = ioService.readIntForRangeWithPrompt(1, question.answers().size(),
+                    "Enter answer", "Your answer is invalid, try again");
             testResult.applyAnswer(question, question.answers().get(numberOfAnswer - 1).isCorrect());
         }
 
