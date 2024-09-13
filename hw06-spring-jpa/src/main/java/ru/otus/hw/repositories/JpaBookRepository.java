@@ -1,9 +1,6 @@
 package ru.otus.hw.repositories;
 
-import jakarta.persistence.EntityGraph;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
@@ -22,20 +19,22 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-entity-graph");
-            Book book = em.createQuery("SELECT b FROM Book b WHERE b.id = :id", Book.class)
-                    .setParameter("id", id)
-                    .setHint(FETCH.getKey(), entityGraph)
-                    .getSingleResult();
-            return Optional.ofNullable(book);
+        Book book = em.find(Book.class, id);
+        if(book != null) {
+            book.getGenres().size();
+            book.getAuthor().getFullName();
+        }
+        return Optional.ofNullable(book);
     }
 
     @Override
     public List<Book> findAll() {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-entity-graph");
+        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-entity-graph");
         TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b", Book.class);
         query.setHint(FETCH.getKey(), entityGraph);
-        return query.getResultList();
+        List<Book> books = query.getResultList();
+        books.get(0).getGenres().size();
+        return books;
     }
 
 
@@ -46,6 +45,6 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        em.remove(findById(id));
+        em.remove(em.find(Book.class, id));
     }
 }
