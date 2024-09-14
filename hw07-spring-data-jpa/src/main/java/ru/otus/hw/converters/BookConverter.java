@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.CommentService;
-import ru.otus.hw.services.GenreService;
 
 import java.util.stream.Collectors;
 
