@@ -2,10 +2,12 @@ package ru.otus.hw.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
@@ -19,9 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 
 @SpringBootTest
-@Transactional
+@Transactional(propagation = Propagation.NEVER)
 public class BookServiceImplIntegrationTest {
-
     @Autowired
     private BookService bookService;
 
@@ -79,12 +80,13 @@ public class BookServiceImplIntegrationTest {
     public void testInsert() {
         Book insertedBook = bookService.insert("New Book", author.getId(), genresIdsSet);
 
-        Optional<Book> foundBook = bookRepository.findById(insertedBook.getId());
+        Optional<Book> foundBook = bookService.findById(insertedBook.getId());
 
         assertThat(foundBook)
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
+                .ignoringFields()
                 .isEqualTo(insertedBook);
     }
 
