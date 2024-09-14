@@ -13,13 +13,9 @@ import java.util.stream.Collectors;
 public class BookConverter {
     private final AuthorConverter authorConverter;
 
-    private final GenreConverter genreConverter;
-
     private final CommentConverter commentConverter;
 
     private final CommentService commentService;
-
-    private final GenreService genreService;
 
     public String bookToString(Book book) {
         var commentString = commentService.findAllByBookId(book.getId()).stream()
