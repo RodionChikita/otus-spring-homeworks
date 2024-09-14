@@ -56,7 +56,17 @@ public class BookServiceImplIntegrationTest {
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
+                .ignoringFields("id")
+                .ignoringFields("author")
                 .isEqualTo(savedBook);
+
+        assertThat(foundBook.get().getAuthor().getId())
+                .usingRecursiveComparison()
+                .isEqualTo(author.getId());
+
+        assertThat(foundBook.get().getAuthor().getFullName())
+                .usingDefaultComparator()
+                .isEqualTo(author.getFullName());
     }
 
     @Test
@@ -84,7 +94,16 @@ public class BookServiceImplIntegrationTest {
                 .get()
                 .usingRecursiveComparison()
                 .ignoringFields("id")
+                .ignoringFields("author")
                 .isEqualTo(new Book(foundBook.get().getId(), "New Book", author, genres));
+
+        assertThat(foundBook.get().getAuthor().getId())
+                .usingRecursiveComparison()
+                .isEqualTo(author.getId());
+
+        assertThat(foundBook.get().getAuthor().getFullName())
+                .usingDefaultComparator()
+                .isEqualTo(author.getFullName());
     }
 
     @Test
@@ -105,7 +124,6 @@ public class BookServiceImplIntegrationTest {
 
     @Test
     public void testDeleteById() {
-        Book book = new Book(0, "Test Book", author, genres);
         Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
         bookService.deleteById(savedBook.getId());
