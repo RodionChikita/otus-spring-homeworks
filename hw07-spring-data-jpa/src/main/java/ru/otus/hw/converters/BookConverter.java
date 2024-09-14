@@ -3,7 +3,6 @@ package ru.otus.hw.converters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.services.CommentService;
 
 import java.util.stream.Collectors;
 
@@ -12,18 +11,16 @@ import java.util.stream.Collectors;
 public class BookConverter {
     private final AuthorConverter authorConverter;
 
-    private final CommentConverter commentConverter;
-
-    private final CommentService commentService;
+    private final GenreConverter genreConverter;
 
     public String bookToString(Book book) {
-        var commentString = commentService.findAllByBookId(book.getId()).stream()
-                .map(commentConverter::commentToString)
+        var genresString = book.getGenres().stream()
+                .map(genreConverter::genreToString)
                 .map("{%s}"::formatted)
                 .collect(Collectors.joining(", "));
-        return "Id: %d, title: %s, author: {%s}, comments: {%s}".formatted(
+        return "Id: %d, title: %s, author: {%s}, genres: {%s}".formatted(
                 book.getId(),
                 book.getTitle(),
-                authorConverter.authorToString(book.getAuthor()), commentString);
+                authorConverter.authorToString(book.getAuthor()), genresString);
     }
 }
