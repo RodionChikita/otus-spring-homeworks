@@ -56,11 +56,4 @@ public class CommentServiceImpl implements CommentService {
     public void deleteById(long id) {
         commentRepository.deleteById(id);
     }
-
-    private Comment save(long id, String text, long bookId) {
-        var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
-        var comment = new Comment(id, text, book);
-        return commentRepository.save(comment);
-    }
 }
