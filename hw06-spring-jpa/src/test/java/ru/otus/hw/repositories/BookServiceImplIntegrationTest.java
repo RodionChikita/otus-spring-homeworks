@@ -2,7 +2,6 @@ package ru.otus.hw.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +48,7 @@ public class BookServiceImplIntegrationTest {
 
     @Test
     public void testFindById() {
-        Book book = new Book(0, "Test Book", author, genres);
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookService.insert("New Book", author.getId(), genresIdsSet);
 
         Optional<Book> foundBook = bookService.findById(savedBook.getId());
 
@@ -63,11 +61,10 @@ public class BookServiceImplIntegrationTest {
 
     @Test
     public void testFindAll() {
-        Book book1 = new Book(0, "Test Book 1", author, genres);
-        Book book2 = new Book(0, "Test Book 2", author, genres);
 
-        bookRepository.save(book1);
-        bookRepository.save(book2);
+        Book book1 = bookService.insert("Test Book 1", author.getId(), genresIdsSet);
+        Book book2 = bookService.insert("Test Book 2", author.getId(), genresIdsSet);
+
 
         List<Book> allBooks = bookService.findAll();
 
@@ -86,14 +83,13 @@ public class BookServiceImplIntegrationTest {
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .ignoringFields()
-                .isEqualTo(insertedBook);
+                .ignoringFields("id")
+                .isEqualTo(new Book(foundBook.get().getId(), "New Book", author, genres));
     }
 
     @Test
     public void testUpdate() {
-        Book book = new Book(0, "Test Book", author, genres);
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
         Author newAuthor = authorRepository.findById(3).get();
         Set<Long> newGenresIdsSet = new HashSet<>();
@@ -104,14 +100,13 @@ public class BookServiceImplIntegrationTest {
 
         assertThat(updatedBook)
                 .usingRecursiveComparison()
-                .ignoringFields("id")
                 .isEqualTo(new Book(savedBook.getId(), "Updated Book", newAuthor, newGenres));
     }
 
     @Test
     public void testDeleteById() {
         Book book = new Book(0, "Test Book", author, genres);
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
         bookService.deleteById(savedBook.getId());
 
