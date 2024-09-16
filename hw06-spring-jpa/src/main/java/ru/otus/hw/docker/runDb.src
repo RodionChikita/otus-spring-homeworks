@@ -1,0 +1,1 @@
+docker run --rm --name pg-docker1 -e POSTGRES_PASSWORD=otus -e POSTGRES_USER=otus -e POSTGRES_DB=otus -p 8283:5432 postgres:latest

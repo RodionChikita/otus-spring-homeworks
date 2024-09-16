@@ -1,0 +1,18 @@
+spring:
+  flyway:
+    enabled: true
+#    locations: "classpath:db.migration"
+  datasource:
+    url: jdbc:postgresql://localhost:8283/otus
+    password: otus
+    username: otus
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+  logging:
+    level:
+      ROOT: ERROR
