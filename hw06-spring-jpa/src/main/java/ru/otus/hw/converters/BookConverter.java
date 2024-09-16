@@ -13,8 +13,6 @@ public class BookConverter {
 
     private final GenreConverter genreConverter;
 
-    private final CommentConverter commentConverter;
-
     public String bookToString(Book book) {
         var genresString = book.getGenres().stream()
                 .map(genreConverter::genreToString)
