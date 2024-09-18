@@ -40,7 +40,7 @@ public class BookServiceImplIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        author = authorRepository.findById(2).get();
+        author = authorRepository.findById(2L).get();
         genresIdsSet = new HashSet<>();
         genresIdsSet.add(3L);
         genres = genreRepository.findByIdIn(genresIdsSet);
@@ -56,7 +56,6 @@ public class BookServiceImplIntegrationTest {
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .ignoringFields("id")
                 .ignoringFields("author")
                 .isEqualTo(savedBook);
 
@@ -93,24 +92,14 @@ public class BookServiceImplIntegrationTest {
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .ignoringFields("id")
-                .ignoringFields("author")
                 .isEqualTo(new Book(foundBook.get().getId(), "New Book", author, genres));
-
-        assertThat(foundBook.get().getAuthor().getId())
-                .usingRecursiveComparison()
-                .isEqualTo(author.getId());
-
-        assertThat(foundBook.get().getAuthor().getFullName())
-                .usingDefaultComparator()
-                .isEqualTo(author.getFullName());
     }
 
     @Test
     public void testUpdate() {
         Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
-        Author newAuthor = authorRepository.findById(3).get();
+        Author newAuthor = authorRepository.findById(3L).get();
         Set<Long> newGenresIdsSet = new HashSet<>();
         newGenresIdsSet.add(4L);
         List<Genre> newGenres = genreRepository.findByIdIn(newGenresIdsSet);

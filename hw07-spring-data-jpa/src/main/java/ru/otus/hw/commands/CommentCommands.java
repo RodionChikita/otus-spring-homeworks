@@ -16,7 +16,7 @@ public class CommentCommands {
     private final CommentConverter commentConverter;
 
     @ShellMethod(value = "Find all comments by book id", key = "acbbid")
-    public String findAllCommentsByIds(long bookId) {
+    public String findAllCommentsByIds(Long bookId) {
         return commentService.findAllByBookId(bookId)
                 .stream()
                 .map(commentConverter::commentToString)
@@ -24,26 +24,26 @@ public class CommentCommands {
     }
 
     @ShellMethod(value = "Find comment by id", key = "cbid")
-    public String findCommentById(long id) {
+    public String findCommentById(Long id) {
         return commentService.findById(id)
                 .map(commentConverter::commentToString)
                 .orElse("Comment with id %d not found".formatted(id));
     }
 
     @ShellMethod(value = "Insert comment", key = "cins")
-    public String insertComment(String text, long bookId) {
+    public String insertComment(String text, Long bookId) {
         var savedComment = commentService.insert(text, bookId);
         return commentConverter.commentToString(savedComment);
     }
 
     @ShellMethod(value = "Update comment", key = "cupd")
-    public String updateComment(long id, String text, long bookId) {
+    public String updateComment(Long id, String text, Long bookId) {
         var savedComment = commentService.update(id, text, bookId);
         return commentConverter.commentToString(savedComment);
     }
 
     @ShellMethod(value = "Delete comment by id", key = "cdel")
-    public void deleteComment(long id) {
+    public void deleteComment(Long id) {
         commentService.deleteById(id);
     }
 

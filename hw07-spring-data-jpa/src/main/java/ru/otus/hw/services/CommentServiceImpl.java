@@ -21,28 +21,28 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Comment> findById(long id) {
+    public Optional<Comment> findById(Long id) {
         return commentRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Comment> findAllByBookId(long bookId) {
-        return commentRepository.findAllByBookId(bookId);
+    public List<Comment> findAllByBookId(Long bookId) {
+        return commentRepository.findByBookId(bookId);
     }
 
     @Transactional
     @Override
-    public Comment insert(String text, long bookId) {
+    public Comment insert(String text, Long bookId) {
         var book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
-        var comment = new Comment(0, text, book);
+        var comment = new Comment(0L, text, book);
         return commentRepository.save(comment);
     }
 
     @Transactional
     @Override
-    public Comment update(long id, String text, long bookId) {
+    public Comment update(Long id, String text, Long bookId) {
         var book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
         var comment = commentRepository.findById(id)
@@ -53,11 +53,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         commentRepository.deleteById(id);
     }
 
-    private Comment save(long id, String text, long bookId) {
+    private Comment save(Long id, String text, Long bookId) {
         var book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
         var comment = new Comment(id, text, book);

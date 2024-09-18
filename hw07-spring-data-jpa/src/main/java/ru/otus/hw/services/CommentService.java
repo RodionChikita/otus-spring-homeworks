@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentService {
-    Optional<Comment> findById(long id);
+    Optional<Comment> findById(Long id);
 
-    List<Comment> findAllByBookId(long bookId);
+    List<Comment> findAllByBookId(Long bookId);
 
-    Comment insert(String text, long bookId);
+    Comment insert(String text, Long bookId);
 
-    Comment update(long id, String text, long bookId);
+    Comment update(Long id, String text, Long bookId);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }
