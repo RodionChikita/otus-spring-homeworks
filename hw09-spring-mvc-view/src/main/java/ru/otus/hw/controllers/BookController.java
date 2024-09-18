@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.dtos.AuthorDto;
+import ru.otus.hw.dtos.BookDto;
+import ru.otus.hw.dtos.GenreDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -15,11 +17,22 @@ import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class BookController {
+    private static final Function<Author, AuthorDto> MAP_AUTHOR_TO_DTO_FUNCTION =
+            a -> new AuthorDto(a.getId(), a.getFullName());
+
+    private static final Function<Genre, GenreDto> MAP_GENRES_TO_DTO_FUNCTION =
+            a -> new GenreDto(a.getId(), a.getName());
+
+    private static final Function<Book, BookDto> MAP_TO_BOOK_DTO_FUNCTION =
+            b -> new BookDto(b.getId(), b.getTitle(), new AuthorDto(b.getAuthor().getId(), b.getAuthor().getFullName()),
+                    b.getGenres().stream().map(MAP_GENRES_TO_DTO_FUNCTION).collect(Collectors.toList()));
+
     private final BookService bookService;
 
     private final AuthorService authorService;
@@ -28,51 +41,55 @@ public class BookController {
 
     @GetMapping("/")
     public String listPage(Model model) {
-        List<Book> books = bookService.findAll();
+        List<BookDto> books = bookService.findAll().stream()
+                .map(MAP_TO_BOOK_DTO_FUNCTION).collect(Collectors.toList());
         model.addAttribute("books", books);
         return "list";
     }
 
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") long id, Model model) {
-        Book book = bookService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
-        List<Author> authors = authorService.findAll();
-        List<Genre> genres = genreService.findAll();
+        BookDto book = bookService.findById(id).map(MAP_TO_BOOK_DTO_FUNCTION).get();
+        List<AuthorDto> authors = authorService.findAll().stream()
+                .map(MAP_AUTHOR_TO_DTO_FUNCTION).collect(Collectors.toList());
+        List<GenreDto> genres = genreService.findAll().stream()
+                .map(MAP_GENRES_TO_DTO_FUNCTION).collect(Collectors.toList());
         model.addAttribute("book",book);
         model.addAttribute("authors", authors);
         model.addAttribute("genres", genres);
         return "edit";
     }
 
-    @GetMapping("/insert")
+    @GetMapping("/book")
     public String insertBookInPage(Model model) {
-        List<Author> authors = authorService.findAll();
-        List<Genre> genres = genreService.findAll();
-        model.addAttribute("book", new Book());
+        List<AuthorDto> authors = authorService.findAll().stream()
+                .map(MAP_AUTHOR_TO_DTO_FUNCTION).collect(Collectors.toList());
+        List<GenreDto> genres = genreService.findAll().stream()
+                .map(MAP_GENRES_TO_DTO_FUNCTION).collect(Collectors.toList());
+        model.addAttribute("book", new BookDto());
         model.addAttribute("authors", authors);
         model.addAttribute("genres", genres);
         return "insert";
     }
 
     @PostMapping("/edit")
-    public String editBook(Book book) {
+    public String editBook(BookDto book) {
         bookService.update(book.getId(), book.getTitle(), book.getAuthor().getId(),
-                book.getGenres().stream().map(Genre::getId).collect(Collectors.toSet()));
+                book.getGenres().stream().map(GenreDto::getId).collect(Collectors.toSet()));
         return "redirect:/";
     }
 
-    @PostMapping("/insert")
-    public String insertBook(Book book) {
+    @PostMapping("/book")
+    public String insertBook(BookDto book) {
         bookService.insert(book.getTitle(), book.getAuthor().getId(),
-                book.getGenres().stream().map(Genre::getId).collect(Collectors.toSet()));
+                book.getGenres().stream().map(GenreDto::getId).collect(Collectors.toSet()));
         return "redirect:/";
     }
 
     @GetMapping("/delete")
     public String deleteBook(@RequestParam("id") long id, Model model) {
         bookService.deleteById(id);
-        List<Book> books = bookService.findAll();
+        List<BookDto> books = bookService.findAll().stream().map(MAP_TO_BOOK_DTO_FUNCTION).collect(Collectors.toList());
         model.addAttribute("books", books);
         return "list";
     }

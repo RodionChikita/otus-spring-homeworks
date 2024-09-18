@@ -8,6 +8,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.controllers.BookController;
+import ru.otus.hw.dtos.AuthorDto;
+import ru.otus.hw.dtos.BookDto;
+import ru.otus.hw.dtos.GenreDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -17,6 +20,8 @@ import ru.otus.hw.services.GenreService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -44,12 +49,18 @@ public class BookControllerTest {
     private Author author;
     private Genre genre;
     private Book book;
+    private BookDto bookDto;
+    private AuthorDto authorDto;
+    private GenreDto genreDto;
 
     @BeforeEach
     public void setUp() {
         author = new Author(1L, "Test Author");
         genre = new Genre(1L, "Test Genre");
         book = new Book(1L, "Test Book", author, List.of(genre));
+        authorDto = new AuthorDto(1L, "Test Author");
+        genreDto = new GenreDto(1L, "Test Genre");
+        bookDto = new BookDto(1L, "Test Book", authorDto, List.of(genreDto));
     }
 
     @Test
@@ -60,7 +71,7 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("list"))
                 .andExpect(model().attributeExists("books"))
-                .andExpect(model().attribute("books", List.of(book)));
+                .andExpect(model().attribute("books", List.of(bookDto)));
     }
 
     @Test
@@ -74,9 +85,9 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("edit"))
                 .andExpect(model().attributeExists("book", "authors", "genres"))
-                .andExpect(model().attribute("book", book))
-                .andExpect(model().attribute("authors", List.of(author)))
-                .andExpect(model().attribute("genres", List.of(genre)));
+                .andExpect(model().attribute("book", bookDto))
+                .andExpect(model().attribute("authors", List.of(authorDto)))
+                .andExpect(model().attribute("genres", List.of(genreDto)));
     }
 
     @Test
@@ -84,12 +95,12 @@ public class BookControllerTest {
         Mockito.when(authorService.findAll()).thenReturn(List.of(author));
         Mockito.when(genreService.findAll()).thenReturn(List.of(genre));
 
-        mockMvc.perform(get("/insert"))
+        mockMvc.perform(get("/book"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("insert"))
                 .andExpect(model().attributeExists("book", "authors", "genres"))
-                .andExpect(model().attribute("authors", List.of(author)))
-                .andExpect(model().attribute("genres", List.of(genre)));
+                .andExpect(model().attribute("authors", List.of(authorDto)))
+                .andExpect(model().attribute("genres", List.of(genreDto)));
     }
 
     @Test
@@ -113,7 +124,7 @@ public class BookControllerTest {
     public void testInsertBook() throws Exception {
         Book newBook = new Book(0L, "New Book", author, List.of(genre));
         Mockito.when(bookService.insert(anyString(), anyLong(), anySet())).thenReturn(newBook);
-        mockMvc.perform(post("/insert")
+        mockMvc.perform(post("/book")
                         .param("title", "New Book")
                         .param("author.id", "1")
                         .param("genres[0].id", "1"))

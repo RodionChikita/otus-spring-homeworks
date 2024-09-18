@@ -3,7 +3,6 @@ package ru.otus.hw.repositories;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
 
@@ -19,10 +18,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Nonnull
     @EntityGraph("book-authors-entity-graph")
     List<Book> findAll();
-
-    @Modifying
-    Book save(Book book);
-
-    @Modifying
-    void deleteById(long id);
 }
