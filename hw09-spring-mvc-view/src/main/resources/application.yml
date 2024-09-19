@@ -1,7 +1,7 @@
 spring:
   flyway:
     enabled: true
-#    locations: "classpath:db.migration"
+    locations: "classpath:db/migration"
   datasource:
     url: jdbc:postgresql://localhost:8283/otus
     password: otus
