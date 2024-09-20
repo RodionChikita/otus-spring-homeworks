@@ -90,15 +90,15 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private void mergeBooksInfo(List<Book> booksWithoutGenres, List<Genre> genres, List<BookGenreRelation> relations) {
-//        for (Book book : booksWithoutGenres) {
-//            Set<Long> genresIds = new HashSet<>();
-//            for (BookGenreRelation relation : relations) {
-//                if (book.getId() == relation.bookId) {
-//                    genresIds.add(relation.genreId);
-//                }
-//            }
-//            book.setGenres(genreRepository.findAllByIds(genresIds));
-//        }
+        for (Book book : booksWithoutGenres) {
+            Set<Long> genresIds = new HashSet<>();
+            for (BookGenreRelation relation : relations) {
+                if (book.getId() == relation.bookId) {
+                    genresIds.add(relation.genreId);
+                }
+            }
+            book.setGenres(genreRepository.findAllByIds(genresIds));
+        }
         // Добавить книгам (booksWithoutGenres) жанры (genres) в соответствии со связями (relations)
     }
 
