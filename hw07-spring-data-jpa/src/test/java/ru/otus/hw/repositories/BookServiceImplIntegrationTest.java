@@ -10,14 +10,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
+import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.BookService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootTest
 @Transactional(propagation = Propagation.NEVER)
@@ -34,6 +32,9 @@ public class BookServiceImplIntegrationTest {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     private Author author;
     private List<Genre> genres;
     private Set<Long> genresIdsSet;
@@ -41,8 +42,7 @@ public class BookServiceImplIntegrationTest {
     @BeforeEach
     public void setUp() {
         author = authorRepository.findById(2L).get();
-        genresIdsSet = new HashSet<>();
-        genresIdsSet.add(3L);
+        genresIdsSet = Set.of(1L, 2L, 3L);
         genres = genreRepository.findByIdIn(genresIdsSet);
     }
 
@@ -100,8 +100,7 @@ public class BookServiceImplIntegrationTest {
         Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
         Author newAuthor = authorRepository.findById(3L).get();
-        Set<Long> newGenresIdsSet = new HashSet<>();
-        newGenresIdsSet.add(4L);
+        Set<Long> newGenresIdsSet = Set.of(4L, 5L, 6L);
         List<Genre> newGenres = genreRepository.findByIdIn(newGenresIdsSet);
 
         Book updatedBook = bookService.update(savedBook.getId(), "Updated Book", newAuthor.getId(), newGenresIdsSet);
@@ -115,11 +114,21 @@ public class BookServiceImplIntegrationTest {
     public void testDeleteById() {
         Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
+        Comment comment = commentRepository.save(new Comment(0L, "Comment", savedBook));
+
+        assertThat(commentRepository.findByBookId(savedBook.getId()))
+                .usingRecursiveComparison()
+                .ignoringFields("book")
+                .isEqualTo(List.of(comment));
+
         bookService.deleteById(savedBook.getId());
 
         Optional<Book> foundBook = bookRepository.findById(savedBook.getId());
 
+        List<Comment> foundComments = commentRepository.findByBookId(savedBook.getId());
+
         assertThat(foundBook).isNotPresent();
+        assertThat(foundComments).isEqualTo(new ArrayList<>());
     }
 
     @Test
