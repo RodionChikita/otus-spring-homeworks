@@ -60,16 +60,7 @@ public class BookServiceImplIntegrationTest {
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .ignoringFields("author")
                 .isEqualTo(savedBook);
-
-        assertThat(foundBook.get().getAuthor().getId())
-                .usingRecursiveComparison()
-                .isEqualTo(author.getId());
-
-        assertThat(foundBook.get().getAuthor().getFullName())
-                .usingDefaultComparator()
-                .isEqualTo(author.getFullName());
     }
 
     @Test
