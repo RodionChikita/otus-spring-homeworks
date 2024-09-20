@@ -32,7 +32,8 @@ public class TestServiceImpl implements TestService {
 
         for (int i = 0; i < questions.size(); i++) {
             showQuestion(questions, i);
-            var numberOfAnswer = ioService.readIntForRangeWithPromptLocalized(1, questions.get(i).answers().size(), "TestService.answer.the.questions", "TestService.invalid.answer");
+            var numberOfAnswer = ioService.readIntForRangeWithPromptLocalized(1, questions.get(i).answers().size(),
+                    "TestService.answer.the.questions", "TestService.invalid.answer");
             testResult.applyAnswer(questions.get(i), questions.get(i).answers().get(numberOfAnswer - 1).isCorrect());
         }
 
