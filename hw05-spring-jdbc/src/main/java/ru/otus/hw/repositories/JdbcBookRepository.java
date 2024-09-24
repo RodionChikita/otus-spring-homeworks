@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -89,24 +90,16 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private void mergeBooksInfo(List<Book> booksWithoutGenres, List<Genre> genres, List<BookGenreRelation> relations) {
-        for (Book book : booksWithoutGenres) {
-            Set<Long> genresIds = new HashSet<>();
-            for (BookGenreRelation relation : relations) {
-                if (book.getId() == relation.bookId) {
-                    genresIds.add(relation.genreId);
-                }
-            }
-            List<Genre> genresByIds = new ArrayList<>();
-            for (Long genreId : genresIds) {
-                for (Genre genre : genres) {
-                    if (genre.getId() == genreId) {
-                        genresByIds.add(genre);
-                    }
-                }
-            }
-            book.setGenres(genresByIds);
+        Map<Long, Set<Long>> bookGenresMap = new HashMap<>();
+        for (BookGenreRelation relation : relations) {
+            bookGenresMap.computeIfAbsent(relation.bookId, k -> new HashSet<>()).add(relation.genreId);
         }
-        // Добавить книгам (booksWithoutGenres) жанры (genres) в соответствии со связями (relations)
+        for (Book book : booksWithoutGenres) {
+            Set<Long> genresIds = bookGenresMap.get(book.getId());
+            if (genresIds != null) {
+                book.setGenres(genreRepository.findAllByIds(genresIds));
+            }
+        }
     }
 
     public Book insert(Book book) {
