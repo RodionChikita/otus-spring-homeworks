@@ -29,8 +29,8 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Question> findAll() {
         ClassLoader classLoader = getClass().getClassLoader();
-        try (InputStream inputStream = Objects.requireNonNull(classLoader
-                .getResourceAsStream(fileNameProvider.getTestFileName()));
+        try (InputStream inputStream = Objects.requireNonNull
+                (classLoader.getResourceAsStream(fileNameProvider.getTestFileName()));
              InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
              BufferedReader reader = new BufferedReader(streamReader)
         ) {
