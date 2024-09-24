@@ -20,7 +20,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -187,25 +186,24 @@ public class JdbcBookRepository implements BookRepository {
         @Override
         public Book extractData(ResultSet rs) throws SQLException, DataAccessException {
             Book book = null;
-            Map<Long, Genre> genreMap = new HashMap<>();
             while (rs.next()) {
-                book = new Book();
-                book.setId(rs.getLong("book_id"));
-                book.setTitle(rs.getString("title"));
-                Author author = new Author();
-                author.setId(rs.getLong("author_id"));
-                author.setFullName(rs.getString("full_name"));
-                book.setAuthor(author);
-                long genreId = rs.getLong("genre_id");
-                if (genreId > 0 && !genreMap.containsKey(genreId)) {
-                    Genre genre = new Genre();
-                    genre.setId(genreId);
-                    genre.setName(rs.getString("genre_name"));
-                    genreMap.put(genreId, genre);
+                if (rs.isFirst()) {
+                    book = new Book();
+                    book.setId(rs.getLong("book_id"));
+                    book.setTitle(rs.getString("title"));
+                    Author author = new Author();
+                    author.setId(rs.getLong("author_id"));
+                    author.setFullName(rs.getString("full_name"));
+                    book.setAuthor(author);
+                    book.setGenres(new ArrayList<>());
                 }
-            }
-            if (book != null) {
-                book.setGenres(new ArrayList<>(genreMap.values()));
+                long genreId = rs.getLong("genre_id");
+                Genre genre = new Genre();
+                genre.setId(genreId);
+                genre.setName(rs.getString("genre_name"));
+                List<Genre> genres = book.getGenres();
+                genres.add(genre);
+                book.setGenres(genres);
             }
             return book;
         }

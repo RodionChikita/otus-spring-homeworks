@@ -2,9 +2,7 @@ package ru.otus.hw;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.service.LocalizedIOService;
 import ru.otus.hw.service.StudentService;
@@ -14,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = StudentService.class)
 public class StudentServiceImplTest {
     private static final String FIRST_NAME = "John";
