@@ -7,15 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.dtos.BookDto;
 import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.BookService;
-import java.util.HashSet;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @Transactional(propagation = Propagation.NEVER)
@@ -31,46 +33,36 @@ public class BookServiceImplIntegrationTest {
     private BookRepository bookRepository;
     private Author author;
     private List<Genre> genres;
-    private Set<Long> genresIdsSet;
+    private List<Long> genresIdsSet;
+    private BookDto bookDto;
     @BeforeEach
     public void setUp() {
         author = authorRepository.findById(2L).get();
-        genresIdsSet = new HashSet<>();
+        genresIdsSet = new ArrayList<>();
         genresIdsSet.add(3L);
         genres = genreRepository.findByIdIn(genresIdsSet);
+        bookDto = new BookDto(0L,"New Book", author.getId(), genresIdsSet);
     }
 
     @Test
     public void testFindById() {
-        Book savedBook = bookService.insert("New Book", author.getId(), genresIdsSet);
+        BookDto savedBook = bookService.insert(bookDto);
 
-        Optional<Book> foundBook = bookService.findById(savedBook.getId());
+        BookDto foundBook = bookService.findById(savedBook.getId());
 
         assertThat(foundBook)
-                .isPresent()
-                .get()
                 .usingRecursiveComparison()
-                .ignoringFields("id")
-                .ignoringFields("author")
                 .isEqualTo(savedBook);
-
-        assertThat(foundBook.get().getAuthor().getId())
-                .usingRecursiveComparison()
-                .isEqualTo(author.getId());
-
-        assertThat(foundBook.get().getAuthor().getFullName())
-                .usingDefaultComparator()
-                .isEqualTo(author.getFullName());
     }
 
     @Test
     public void testFindAll() {
 
-        Book book1 = bookService.insert("Test Book 1", author.getId(), genresIdsSet);
-        Book book2 = bookService.insert("Test Book 2", author.getId(), genresIdsSet);
+        BookDto book1 = bookService.insert(new BookDto(0L,"Test Book 1", author.getId(), genresIdsSet));
+        BookDto book2 = bookService.insert(new BookDto(0L,"Test Book 2", author.getId(), genresIdsSet));
 
 
-        List<Book> allBooks = bookService.findAll();
+        List<BookDto> allBooks = bookService.findAll();
 
         assertThat(allBooks)
                 .usingRecursiveFieldByFieldElementComparator()
@@ -78,45 +70,34 @@ public class BookServiceImplIntegrationTest {
     }
     @Test
     public void testInsert() {
-        Book insertedBook = bookService.insert("New Book", author.getId(), genresIdsSet);
+        BookDto insertedBook = bookService.insert(bookDto);
 
-        Optional<Book> foundBook = bookService.findById(insertedBook.getId());
+        BookDto foundBook = bookService.findById(insertedBook.getId());
 
         assertThat(foundBook)
-                .isPresent()
-                .get()
                 .usingRecursiveComparison()
                 .ignoringFields("id")
-                .ignoringFields("author")
-                .isEqualTo(new Book(foundBook.get().getId(), "New Book", author, genres));
-
-        assertThat(foundBook.get().getAuthor().getId())
-                .usingRecursiveComparison()
-                .isEqualTo(author.getId());
-
-        assertThat(foundBook.get().getAuthor().getFullName())
-                .usingDefaultComparator()
-                .isEqualTo(author.getFullName());
+                .isEqualTo(bookDto);
     }
 
     @Test
     public void testUpdate() {
-        Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
+        BookDto savedBook = bookService.insert(bookDto);
 
         Author newAuthor = authorRepository.findById(3L).get();
-        Set<Long> newGenresIdsSet = new HashSet<>();
+        List<Long> newGenresIdsSet = new ArrayList<>();
         newGenresIdsSet.add(4L);
         List<Genre> newGenres = genreRepository.findByIdIn(newGenresIdsSet);
-        Book updatedBook = bookService.update(savedBook.getId(), "Updated Book", newAuthor.getId(), newGenresIdsSet);
+        BookDto updatedBook = bookService.update(new BookDto(savedBook.getId(), "Updated Book", newAuthor.getId(), newGenresIdsSet));
 
         assertThat(updatedBook)
                 .usingRecursiveComparison()
-                .isEqualTo(new Book(savedBook.getId(), "Updated Book", newAuthor, newGenres));
+                .isEqualTo(new BookDto(savedBook.getId(), "Updated Book", newAuthor.getId(), newGenres.stream().map(Genre::getId).collect(Collectors.toList())));
     }
 
     @Test
     public void testDeleteById() {
-        Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
+        BookDto savedBook = bookService.insert(bookDto);
 
         bookService.deleteById(savedBook.getId());
 
@@ -126,16 +107,16 @@ public class BookServiceImplIntegrationTest {
     @Test
     public void testInsertWithNonExistingAuthor() {
         assertThrows(NotFoundException.class, () ->
-                bookService.insert("New Book", 9999L, genresIdsSet));
+                bookService.insert(new BookDto(0L,"New Book", 9999L, genresIdsSet)));
     }
     @Test
     public void testInsertWithNonExistingGenre() {
         assertThrows(NotFoundException.class, () ->
-                bookService.insert("New Book", author.getId(), Set.of(9999L)));
+                bookService.insert(new BookDto(0L,"New Book", author.getId(), List.of(9999L))));
     }
     @Test
     public void testUpdateWithNonExistingBook() {
         assertThrows(NotFoundException.class, () ->
-                bookService.update(9999L, "Updated Book", author.getId(), genresIdsSet));
+                bookService.update(new BookDto(9999L, "Updated Book", author.getId(), genresIdsSet)));
     }
 }

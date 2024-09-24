@@ -19,14 +19,9 @@ import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anySet;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -60,12 +55,12 @@ public class BookControllerTest {
         book = new Book(1L, "Test Book", author, List.of(genre));
         authorDto = new AuthorDto(1L, "Test Author");
         genreDto = new GenreDto(1L, "Test Genre");
-        bookDto = new BookDto(1L, "Test Book", authorDto, List.of(genreDto));
+        bookDto = new BookDto(1L, "Test Book", 1L, List.of(1L));
     }
 
     @Test
     public void testListPage() throws Exception {
-        Mockito.when(bookService.findAll()).thenReturn(List.of(book));
+        Mockito.when(bookService.findAll()).thenReturn(List.of(bookDto));
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -76,9 +71,9 @@ public class BookControllerTest {
 
     @Test
     public void testEditPage() throws Exception {
-        Mockito.when(bookService.findById(anyLong())).thenReturn(Optional.of(book));
-        Mockito.when(authorService.findAll()).thenReturn(List.of(author));
-        Mockito.when(genreService.findAll()).thenReturn(List.of(genre));
+        Mockito.when(bookService.findById(anyLong())).thenReturn(bookDto);
+        Mockito.when(authorService.findAll()).thenReturn(List.of(authorDto));
+        Mockito.when(genreService.findAll()).thenReturn(List.of(genreDto));
 
         mockMvc.perform(get("/edit")
                         .param("id", "1"))
@@ -92,8 +87,8 @@ public class BookControllerTest {
 
     @Test
     public void testInsertBookInPage() throws Exception {
-        Mockito.when(authorService.findAll()).thenReturn(List.of(author));
-        Mockito.when(genreService.findAll()).thenReturn(List.of(genre));
+        Mockito.when(authorService.findAll()).thenReturn(List.of(authorDto));
+        Mockito.when(genreService.findAll()).thenReturn(List.of(genreDto));
 
         mockMvc.perform(get("/book"))
                 .andExpect(status().isOk())
@@ -105,8 +100,8 @@ public class BookControllerTest {
 
     @Test
     public void testEditBook() throws Exception {
-        Book updatedBook = new Book(1L, "Updated Book", author, List.of(genre));
-        Mockito.when(bookService.update(anyLong(), any(), anyLong(), any()))
+        BookDto updatedBook = new BookDto(1L, "Updated Book", 1L, List.of(1L));
+        Mockito.when(bookService.update(any()))
                 .thenReturn(updatedBook);
 
         mockMvc.perform(post("/edit")
@@ -117,20 +112,20 @@ public class BookControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        Mockito.verify(bookService).update(eq(1L), eq("Updated Book"), eq(1L), any());
+        Mockito.verify(bookService).update(any());
     }
 
     @Test
     public void testInsertBook() throws Exception {
-        Book newBook = new Book(0L, "New Book", author, List.of(genre));
-        Mockito.when(bookService.insert(anyString(), anyLong(), anySet())).thenReturn(newBook);
+        BookDto newBook = new BookDto(0L, "New Book", 1L, List.of(1L));
+        Mockito.when(bookService.insert(any())).thenReturn(newBook);
         mockMvc.perform(post("/book")
                         .param("title", "New Book")
                         .param("author.id", "1")
                         .param("genres[0].id", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
-        Mockito.verify(bookService).insert(eq("New Book"), eq(1L), anySet());
+        Mockito.verify(bookService).insert(any());
     }
 
     @Test

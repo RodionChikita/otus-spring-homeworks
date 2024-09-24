@@ -1,11 +1,9 @@
 package ru.otus.hw.services;
 
-import ru.otus.hw.models.Genre;
+import ru.otus.hw.dtos.GenreDto;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public interface GenreService {
-    List<Genre> findAll();
+    List<GenreDto> findAll();
 }

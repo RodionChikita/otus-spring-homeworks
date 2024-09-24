@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Edit person</title>
+    <title>Edit Book</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -23,37 +23,32 @@
     </style>
 </head>
 <body>
-<form id="edit-form" action="edit.html" th:method="post" th:action="@{/edit(id=${book.id})}"
-      th:object="${book}">
-    <h3>Book Info:</h3>
 
-    <div class="row">
-        <label for="id-input">ID:</label>
-        <input id="id-input" type="text"  readonly="readonly" th:value="*{id}"/>
-    </div>
+<h3>Edit Book</h3>
 
-    <div class="row">
-        <label for="book-title-input">Title:</label>
-        <input id="book-title-input" name="title" type="text" th:value="*{title}"/>
-    </div>
+<form action="#" th:action="@{/edit}" th:object="${book}" method="post">
+    <input type="hidden" th:field="*{id}"/>
 
-    <div class="row">
-        <label>Author:</label>
-        <div th:each="author : ${authors}">
-            <input type="radio" name="author" th:value="${author.id}"
-                   th:text="${author.fullName}"
-                   th:checked="${author.id == book.author.id}"/>
-        </div>
-    </div>
+    <label for="title">Title:</label>
+    <input type="text" id="title" th:field="*{title}" placeholder="Book Title"/><br/><br/>
 
-    <div class="row">
-        <label>Genres:</label>
-        <div th:each="genre : ${genres}">
-            <input type="checkbox" name="genres" th:value="${genre.id}"
-                   th:text="${genre.name}"
-                   th:checked="${#lists.contains(book.genres, genre)}"/>
-        </div>
+    <label for="author">Author:</label>
+    <select id="author" th:field="*{authorId}">
+        <option th:each="author : ${authors}"
+                th:value="${author.id}"
+                th:text="${author.fullName}"
+                th:selected="${author.id == book.authorId}">
+        </option>
+    </select><br/><br/>
+
+    <label>Genres:</label><br/>
+    <div th:each="genre : ${genres}">
+        <input type="checkbox" th:value="${genre.id}"
+               th:field="*{genresIds}"
+               th:checked="${#lists.contains(book.genresIds, genre.id)}"/>
+        <label th:text="${genre.name}"></label><br/>
     </div>
+    <br/>
 
     <div class="row">
         <button type="submit">Save</button>
@@ -62,6 +57,6 @@
         </a>
     </div>
 </form>
-</body>
 
+</body>
 </html>

@@ -5,9 +5,8 @@ import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Long> {
-    List<Genre> findByIdIn(Set<Long> ids);
+    List<Genre> findByIdIn(List<Long> ids);
 }

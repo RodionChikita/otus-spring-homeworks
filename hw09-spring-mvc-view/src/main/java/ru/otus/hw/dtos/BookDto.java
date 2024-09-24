@@ -16,7 +16,7 @@ public class BookDto {
 
     private String title;
 
-    private AuthorDto author;
+    private Long authorId;
 
-    private List<GenreDto> genres;
+    private List<Long> genresIds;
 }

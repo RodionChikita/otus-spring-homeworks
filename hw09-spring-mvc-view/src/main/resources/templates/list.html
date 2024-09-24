@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all persons</title>
+    <title>List of all books</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -41,17 +41,32 @@
     <tr th:each="book : ${books}">
         <td th:text="${book.id}">1</td>
         <td th:text="${book.title}">The Master and Margarita</td>
-        <td th:text="${book.author.fullName}">Mikhail Bulgakov</td>
-        <td>
-            <p th:each="genre : ${book.genres}" th:text="${genre.name}">Satire</p>
+
+        <!-- Цикл для нахождения имени автора по его id -->
+        <td th:each="author : ${authors}"
+            th:if="${author.id == book.authorId}"
+            th:text="${author.fullName}">
+            Mikhail Bulgakov
         </td>
+
+        <!-- Цикл для отображения жанров по их id -->
         <td>
-            <a href="edit.html" th:href="@{/edit(id=${book.id})}">Edit</a>
-            <a href="edit.html" th:href="@{/delete(id=${book.id})}">Delete</a>
+            <p th:each="genreId : ${book.genresIds}">
+                <span th:each="genre : ${genres}"
+                      th:if="${genre.id == genreId}"
+                      th:text="${genre.name}">
+                    Satire
+                </span>
+            </p>
+        </td>
+
+        <td>
+            <a th:href="@{/edit(id=${book.id})}">Edit</a>
+            <a th:href="@{/delete(id=${book.id})}">Delete</a>
         </td>
     </tr>
     </tbody>
 </table>
-<a href="insert.html" th:href="@{/book}">Insert</a>
+<a th:href="@{/book}">Insert</a>
 </body>
 </html>
