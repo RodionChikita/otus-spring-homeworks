@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 500px;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+<h3>Books:</h3>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genres</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}">1</td>
+        <td th:text="${book.title}">The Master and Margarita</td>
+
+        <!-- Цикл для нахождения имени автора по его id -->
+        <td th:each="author : ${authors}"
+            th:if="${author.id == book.authorId}"
+            th:text="${author.fullName}">
+            Mikhail Bulgakov
+        </td>
+
+        <!-- Цикл для отображения жанров по их id -->
+        <td>
+            <p th:each="genreId : ${book.genresIds}">
+                <span th:each="genre : ${genres}"
+                      th:if="${genre.id == genreId}"
+                      th:text="${genre.name}">
+                    Satire
+                </span>
+            </p>
+        </td>
+
+        <td>
+            <a th:href="@{/edit(id=${book.id})}">Edit</a>
+            <a th:href="@{/delete(id=${book.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/book}">Insert</a>
+</body>
+</html>
