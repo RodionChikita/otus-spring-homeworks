@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
@@ -19,9 +20,8 @@ import java.util.Optional;
 import java.util.Set;
 
 @SpringBootTest
-@Transactional
+@Transactional(propagation = Propagation.NEVER)
 public class BookServiceImplIntegrationTest {
-
     @Autowired
     private BookService bookService;
 
@@ -48,8 +48,7 @@ public class BookServiceImplIntegrationTest {
 
     @Test
     public void testFindById() {
-        Book book = new Book(0, "Test Book", author, genres);
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookService.insert("New Book", author.getId(), genresIdsSet);
 
         Optional<Book> foundBook = bookService.findById(savedBook.getId());
 
@@ -57,16 +56,25 @@ public class BookServiceImplIntegrationTest {
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
+                .ignoringFields("id")
+                .ignoringFields("author")
                 .isEqualTo(savedBook);
+
+        assertThat(foundBook.get().getAuthor().getId())
+                .usingRecursiveComparison()
+                .isEqualTo(author.getId());
+
+        assertThat(foundBook.get().getAuthor().getFullName())
+                .usingDefaultComparator()
+                .isEqualTo(author.getFullName());
     }
 
     @Test
     public void testFindAll() {
-        Book book1 = new Book(0, "Test Book 1", author, genres);
-        Book book2 = new Book(0, "Test Book 2", author, genres);
 
-        bookRepository.save(book1);
-        bookRepository.save(book2);
+        Book book1 = bookService.insert("Test Book 1", author.getId(), genresIdsSet);
+        Book book2 = bookService.insert("Test Book 2", author.getId(), genresIdsSet);
+
 
         List<Book> allBooks = bookService.findAll();
 
@@ -79,19 +87,28 @@ public class BookServiceImplIntegrationTest {
     public void testInsert() {
         Book insertedBook = bookService.insert("New Book", author.getId(), genresIdsSet);
 
-        Optional<Book> foundBook = bookRepository.findById(insertedBook.getId());
+        Optional<Book> foundBook = bookService.findById(insertedBook.getId());
 
         assertThat(foundBook)
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .isEqualTo(insertedBook);
+                .ignoringFields("id")
+                .ignoringFields("author")
+                .isEqualTo(new Book(foundBook.get().getId(), "New Book", author, genres));
+
+        assertThat(foundBook.get().getAuthor().getId())
+                .usingRecursiveComparison()
+                .isEqualTo(author.getId());
+
+        assertThat(foundBook.get().getAuthor().getFullName())
+                .usingDefaultComparator()
+                .isEqualTo(author.getFullName());
     }
 
     @Test
     public void testUpdate() {
-        Book book = new Book(0, "Test Book", author, genres);
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
         Author newAuthor = authorRepository.findById(3).get();
         Set<Long> newGenresIdsSet = new HashSet<>();
@@ -102,14 +119,12 @@ public class BookServiceImplIntegrationTest {
 
         assertThat(updatedBook)
                 .usingRecursiveComparison()
-                .ignoringFields("id")
                 .isEqualTo(new Book(savedBook.getId(), "Updated Book", newAuthor, newGenres));
     }
 
     @Test
     public void testDeleteById() {
-        Book book = new Book(0, "Test Book", author, genres);
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookService.insert("Test Book", author.getId(), genresIdsSet);
 
         bookService.deleteById(savedBook.getId());
 

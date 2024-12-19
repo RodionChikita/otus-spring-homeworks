@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
@@ -23,19 +26,19 @@ public class JpaBookRepository implements BookRepository {
     @Override
     public Optional<Book> findById(long id) {
         EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-entity-graph");
-            Book book = em.createQuery("SELECT b FROM Book b WHERE b.id = :id", Book.class)
-                    .setParameter("id", id)
-                    .setHint(FETCH.getKey(), entityGraph)
-                    .getSingleResult();
-            return Optional.ofNullable(book);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jakarta.persistence.fetchgraph", entityGraph);
+        Book book = em.find(Book.class, id, properties);
+        return Optional.ofNullable(book);
     }
 
     @Override
     public List<Book> findAll() {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-genres-entity-graph");
+        EntityGraph<?> entityGraph = em.getEntityGraph("book-authors-entity-graph");
         TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b", Book.class);
         query.setHint(FETCH.getKey(), entityGraph);
-        return query.getResultList();
+        List<Book> books = query.getResultList();
+        return books;
     }
 
 
@@ -46,6 +49,9 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        em.remove(findById(id));
+        Book book = em.find(Book.class, id);
+        if (book != null) {
+            em.remove(book);
+        }
     }
 }
